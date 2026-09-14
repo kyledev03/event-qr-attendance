@@ -1,6 +1,22 @@
+"use client";
+
+import { useEffect } from "react";
 import Image from "next/image";
+import { supabase } from "@/lib/supabase";
 
 export default function Home() {
+  useEffect(() => {
+    async function testConnection() {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        console.error("❌ Supabase connection error:", error.message);
+      } else {
+        console.log("✅ Supabase connected successfully!", data);
+      }
+    }
+    testConnection();
+  }, []);
+
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">

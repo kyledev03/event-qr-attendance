@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Student {
+  id            String   @id
+  name          String
+  studentNumber String   @unique
+  yearLevel     String
+  email         String   @unique
+  createdAt     DateTime @default(now())
+
+  attendances   Attendance[]
+}
+
+model Event {
+  id                  String    @id @default(uuid())
+  name                String
+  date                DateTime
+  time                String
+  location            String?
+  description         String?
+  status              String    @default("not_started")
+  currentCheckinToken String?
+  tokenExpiresAt      DateTime?
+  createdAt           DateTime  @default(now())
+
+  roster       EventRoster[]
+  attendances  Attendance[]
+}
+
+model EventRoster {
+  id            String @id @default(uuid())
+  eventId       String
+  studentNumber String
+  name          String
+  yearLevel     String
+
+  event Event @relation(fields: [eventId], references: [id])
+
+  @@unique([eventId, studentNumber])
+}
+
+model Attendance {
+  id          String    @id @default(uuid())
+  eventId     String
+  studentId   String
+  checkedIn   Boolean   @default(false)
+  checkedInAt DateTime?
+  isWalkIn    Boolean   @default(false)
+
+  event   Event   @relation(fields: [eventId], references: [id])
+  student Student @relation(fields: [studentId], references: [id])
+
+  @@unique([eventId, studentId])
+}
