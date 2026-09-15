@@ -23,10 +23,10 @@ export default function ScanPage() {
     try {
       log("Creating Html5QrcodeScanner instance...");
       const scanner = new Html5QrcodeScanner(
-        "reader",
-        { fps: 10, qrbox: 250 },
-        false
-      );
+  "reader",
+  { fps: 10, qrbox: { width: 280, height: 280 }, aspectRatio: 1.0 },
+  false
+);
       scannerRef.current = scanner;
       log("Scanner instance created. Calling render()...");
 
